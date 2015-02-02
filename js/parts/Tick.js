@@ -401,8 +401,14 @@ Tick.prototype = {
 				show = false;
 
 			// Handle label overflow and show or hide accordingly
-			} else if (!axis.isRadial && !labelOptions.step && !labelOptions.rotation && !old && opacity !== 0) {
-				show = tick.handleOverflow(index, xy);
+			} else if (!axis.isRadial && !labelOptions.rotation && !old && opacity !== 0) {
+				if (!labelOptions.step) {
+					show = tick.handleOverflow(index, xy);
+				} else if (horiz) {
+					// don't allow handleOverflow to hide horiz labels, if step exists
+					// this is used only for updating the xy.x value
+					tick.handleOverflow(index, xy);
+				}
 			}
 
 			// apply step
